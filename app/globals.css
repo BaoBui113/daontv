@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.noto-sans-kr-font {
+  font-family: "Noto Sans KR";
+}
