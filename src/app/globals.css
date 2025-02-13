@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.noto-sans-kr-font {
+  font-family: "Noto Sans KR";
+}
+.swiper-button-prev,
+.swiper-button-next {
+  color: white !important;
+  width: 60px !important;
+  height: 60px !important;
+  background-color: #47474799;
+  border-radius: 50%;
+}
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 24px !important;
+}
