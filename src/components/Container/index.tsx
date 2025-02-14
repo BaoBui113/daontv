@@ -7,5 +7,5 @@ export default function Container({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={`px-4 ${className}`}>{children}</div>;
+  return <div className={`p-4 ${className}`}>{children}</div>;
 }

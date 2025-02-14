@@ -8,7 +8,7 @@ export default function Home() {
       <div className="my-4">
         <TopFilm />
       </div>
-      <Container className="my-4">
+      <Container>
         <HomePage />
       </Container>
     </>

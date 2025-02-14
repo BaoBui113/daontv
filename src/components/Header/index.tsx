@@ -1,10 +1,18 @@
+"use client";
 import search_icon from "@/assets/icons/icon-search.svg";
 import logo from "@/assets/images/logo.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 export default function Header() {
+  const router = useRouter();
   return (
     <div className="bg-[#3A3A3A] z-50 gap-4 md:gap-0 h-[77px] px-4 left-0 right-0 top-0  md:rounded-[100px] md:h-[53px] fixed md:top-2 md:bottom-2 md:right-6 md:left-6 md:px-6 flex items-center justify-between">
-      <div className="relative w-[95px] h-5 md:w-[152px] md:h-[33px] flex-shrink-0">
+      <div
+        onClick={() => {
+          router.push("/");
+        }}
+        className="relative w-[95px] h-5 md:w-[152px] md:h-[33px] flex-shrink-0 cursor-pointer"
+      >
         <Image src={logo} alt="logo" fill />
       </div>
       <div className="flex gap-3 md:gap-[10px] items-center pr-4 md:pr-8">

@@ -41,6 +41,7 @@ export default function HomePage() {
               <div key={key} className="relative">
                 <CategoryFilmItem
                   slidesPerView={5.2}
+                  categories={movies[0].categories[0]}
                   title={movies[0].categories[0].name}
                   listFilmCategories={movies as IMovies[]}
                 />

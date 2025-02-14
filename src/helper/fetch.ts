@@ -1,3 +1,4 @@
+"use server";
 export const fetchData = async <T>(
   url: string,
   method: string = "GET",
