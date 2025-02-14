@@ -23,7 +23,7 @@ const listFilms = [
 export default function TopFilm() {
   return (
     <>
-      <CommonSwiper>
+      <CommonSwiper slidePerViewResponsive={1} slidesPerView={1}>
         {listFilms.map((film) => {
           return (
             <SwiperSlide key={film.id}>

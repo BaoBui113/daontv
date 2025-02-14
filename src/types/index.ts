@@ -34,4 +34,5 @@ export interface IMovies {
   video_episode: number;
   des: string;
   title: string;
+  createdDate: string;
 }

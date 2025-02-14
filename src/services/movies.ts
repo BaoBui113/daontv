@@ -21,16 +21,18 @@ export const getMovieCategories = async ({
   search?: string;
   page?: number;
   limit?: number;
-  categoryId: number;
+  categoryId?: number;
 }) => {
   try {
     const params = new URLSearchParams({
       page: String(page),
       limit: String(limit),
-      categoryId: String(categoryId),
     });
     if (search) {
       params.append("search", search);
+    }
+    if (categoryId) {
+      params.append("categoryId", String(categoryId));
     }
     const res = await fetchData(`/movies/?${params.toString()}`);
     return res;

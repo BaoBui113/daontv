@@ -57,7 +57,7 @@ export default function Footer() {
           <span className="text-base leading-5">{`Copyright © 티비몬 All right reserved.`}</span>
         </div>
       </div>
-      <div className="fixed bottom-0 left-0 right-0 flex items-center md:hidden gap-8 sm:gap-14 bg-black justify-center py-3 px-3">
+      <div className="fixed bottom-0 left-0 right-0 flex items-center md:hidden gap-8 sm:gap-14 bg-black justify-center py-3 px-3 z-50">
         {categories.map((category, index) => (
           <Category key={index} src={category.image} title={category.title} />
         ))}

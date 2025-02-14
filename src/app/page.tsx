@@ -5,7 +5,7 @@ import TopFilm from "@/components/TopFilm";
 export default function Home() {
   return (
     <>
-      <div className="my-4">
+      <div className="my-4 md:block hidden">
         <TopFilm />
       </div>
       <Container>

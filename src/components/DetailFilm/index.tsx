@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import CollectionFilm from "../CollectionFilm";
 import InformationDetailFilm from "../InformationFilm";
 import MoviePlayer from "../MoviePlayer";
+import RelatedFilm from "../RelatedFilm";
 const ButtonSelectFilm = ({
   number_ep,
   isActive,
@@ -35,8 +36,6 @@ export default function DetailMovie({ movie }: { movie: string }) {
   const [video_url, setVideoUrl] = useState<string | null>(null);
   const router = useRouter();
   const handleSelectEpisode = (episode: IEpisodes) => {
-    console.log("episode", episode);
-
     router.push(`${window.location.pathname}?number_ep=${episode.ep_no}`);
     setVideoUrl(episode.video_url);
   };
@@ -66,33 +65,37 @@ export default function DetailMovie({ movie }: { movie: string }) {
   }, [number_ep, detailMovie]);
   return (
     <>
-      {!detailMovie && <div>Loading...</div>}
-      <CollectionFilm mainTitle={detailMovie?.title ?? ""}>
-        <div className="mb-5">
-          <MoviePlayer movieUrl={video_url!} />
-        </div>
-        <div className="my-1 bg-[#313131] rounded px-4 py-6 flex gap-[10px] flex-wrap items-center">
-          <span>서버 : </span>
-          {detailMovie?.episodes
-            .map((ep) => (
-              <ButtonSelectFilm
-                episode={ep}
-                handleSelectEpisode={() => handleSelectEpisode(ep)}
-                key={ep.ep_no}
-                number_ep={`서버${ep.ep_no === 0 ? 1 : ep.ep_no}`}
-                isActive={
-                  ep.ep_no ===
-                    (Number(number_ep) || detailMovie.episodes.length) ||
-                  ep.ep_no === 0
-                }
-              />
-            ))
-            .reverse()}
-        </div>
-        <div className="my-1">
-          <InformationDetailFilm />
-        </div>
-      </CollectionFilm>
+      {detailMovie ? (
+        <CollectionFilm mainTitle={detailMovie?.title ?? ""}>
+          <div className="mb-5">
+            <MoviePlayer movieUrl={video_url!} />
+          </div>
+          <div className="my-1 bg-[#313131] rounded px-4 py-6 flex gap-[10px] flex-wrap items-center">
+            <span>서버 : </span>
+            {detailMovie?.episodes
+              .map((ep) => (
+                <ButtonSelectFilm
+                  episode={ep}
+                  handleSelectEpisode={() => handleSelectEpisode(ep)}
+                  key={ep.ep_no}
+                  number_ep={`서버${ep.ep_no === 0 ? 1 : ep.ep_no}`}
+                  isActive={
+                    ep.ep_no ===
+                      (Number(number_ep) || detailMovie.episodes.length) ||
+                    ep.ep_no === 0
+                  }
+                />
+              ))
+              .reverse()}
+          </div>
+          <div className="my-1">
+            <InformationDetailFilm profile={detailMovie} />
+          </div>
+          <div className="my-4">
+            <RelatedFilm />
+          </div>
+        </CollectionFilm>
+      ) : null}
     </>
   );
 }
