@@ -188,7 +188,7 @@ export default function CategoryFilmItem({
         Math.ceil(total / limitMovies) > 1 &&
         pagination &&
         setPagination && (
-          <div className="flex gap-1 items-center justify-center mt-6">
+          <div className="flex gap-1 items-center justify-center mt-6 max-w-[700px] w-full flex-wrap mx-auto">
             <ButtonPagination
               disable={pagination.page === 1}
               className={`${

@@ -1,5 +1,8 @@
 "use client";
+import { ANIMATION_REVEAL_ELEMENT } from "@/constants";
+import { ScrollRevealElement } from "@/helper/animation";
 import Image from "next/image";
+import { useEffect } from "react";
 import { SwiperSlide } from "swiper/react";
 import CommonSwiper from "../Swiper";
 
@@ -20,9 +23,24 @@ const listFilms = [
       "https://media.themoviedb.org/t/p/original/293Mo4GWf7Tl0TfAr5NFghqeMy7.jpg",
   },
 ];
+
 export default function TopFilm() {
+  useEffect(() => {
+    ScrollRevealElement(
+      ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default,
+      ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.active
+    );
+    ScrollRevealElement(
+      ANIMATION_REVEAL_ELEMENT.LEFT_TO_RIGHT.default,
+      ANIMATION_REVEAL_ELEMENT.LEFT_TO_RIGHT.active
+    );
+    ScrollRevealElement(
+      ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.default,
+      ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.active
+    );
+  }, []);
   return (
-    <>
+    <div className={`${ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default}`}>
       <CommonSwiper slidePerViewResponsive={1} slidesPerView={1}>
         {listFilms.map((film) => {
           return (
@@ -39,6 +57,6 @@ export default function TopFilm() {
           );
         })}
       </CommonSwiper>
-    </>
+    </div>
   );
 }

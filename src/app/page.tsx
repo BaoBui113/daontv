@@ -8,7 +8,7 @@ export default function Home() {
       <div className="my-4 md:block hidden">
         <TopFilm />
       </div>
-      <Container>
+      <Container className="md:mt-0 pt-[80px]">
         <HomePage />
       </Container>
     </>

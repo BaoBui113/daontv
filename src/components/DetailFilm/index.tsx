@@ -1,5 +1,7 @@
 "use client";
 
+import { ANIMATION_REVEAL_ELEMENT } from "@/constants";
+import { ScrollRevealElement } from "@/helper/animation";
 import { getMovieDetail } from "@/services/movies";
 import { IEpisodes, IMovies } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -55,6 +57,7 @@ export default function DetailMovie({ movie }: { movie: string }) {
     };
     fetchMovie();
   }, [movie]);
+
   useEffect(() => {
     if (!detailMovie) return;
     const video =
@@ -63,14 +66,33 @@ export default function DetailMovie({ movie }: { movie: string }) {
       ) ?? detailMovie.episodes[detailMovie.episodes.length - 1];
     setVideoUrl(video.video_url);
   }, [number_ep, detailMovie]);
+
+  useEffect(() => {
+    ScrollRevealElement(
+      ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default,
+      ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.active
+    );
+    ScrollRevealElement(
+      ANIMATION_REVEAL_ELEMENT.LEFT_TO_RIGHT.default,
+      ANIMATION_REVEAL_ELEMENT.LEFT_TO_RIGHT.active
+    );
+    ScrollRevealElement(
+      ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.default,
+      ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.active
+    );
+  }, []);
   return (
     <>
       {detailMovie ? (
         <CollectionFilm mainTitle={detailMovie?.title ?? ""}>
-          <div className="mb-5">
+          <div
+            className={`${ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.default} mb-5`}
+          >
             <MoviePlayer movieUrl={video_url!} />
           </div>
-          <div className="my-1 bg-[#313131] rounded px-4 py-6 flex gap-[10px] flex-wrap items-center">
+          <div
+            className={`my-1 bg-[#313131] rounded px-4 py-6 flex gap-[10px] flex-wrap items-center ${ANIMATION_REVEAL_ELEMENT.LEFT_TO_RIGHT.default}`}
+          >
             <span>서버 : </span>
             {detailMovie?.episodes
               .map((ep) => (
@@ -88,10 +110,14 @@ export default function DetailMovie({ movie }: { movie: string }) {
               ))
               .reverse()}
           </div>
-          <div className="my-1">
+          <div
+            className={`${ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.default} my-1`}
+          >
             <InformationDetailFilm profile={detailMovie} />
           </div>
-          <div className="my-4">
+          <div
+            className={`my-4 ${ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default}`}
+          >
             <RelatedFilm />
           </div>
         </CollectionFilm>

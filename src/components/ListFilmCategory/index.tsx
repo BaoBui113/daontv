@@ -1,6 +1,7 @@
 "use client";
 
-import { limitMovies } from "@/constants";
+import { ANIMATION_REVEAL_ELEMENT, limitMovies } from "@/constants";
+import { ScrollRevealElement } from "@/helper/animation";
 import { getMovieCategories } from "@/services/movies";
 import { IMovies } from "@/types";
 import { useEffect, useState } from "react";
@@ -38,17 +39,32 @@ export default function ListFilmCategory({ category }: { category: string }) {
     };
     fetchMovies();
   }, [pagination, categoryId]);
-
+  useEffect(() => {
+    ScrollRevealElement(
+      ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default,
+      ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.active
+    );
+    ScrollRevealElement(
+      ANIMATION_REVEAL_ELEMENT.LEFT_TO_RIGHT.default,
+      ANIMATION_REVEAL_ELEMENT.LEFT_TO_RIGHT.active
+    );
+    ScrollRevealElement(
+      ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.default,
+      ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.active
+    );
+  }, []);
   return (
-    <CollectionFilm mainTitle={listMovie.movies[0]?.categories[0].name}>
-      <CategoryFilmItem
-        total={listMovie.total}
-        listFilmCategories={listMovie.movies}
-        title={listMovie.movies[0]?.categories[0].name}
-        isSwiper={false}
-        pagination={pagination}
-        setPagination={setPagination}
-      />
-    </CollectionFilm>
+    <div className={`${ANIMATION_REVEAL_ELEMENT.LEFT_TO_RIGHT.default}`}>
+      <CollectionFilm mainTitle={listMovie.movies[0]?.categories[0].name}>
+        <CategoryFilmItem
+          total={listMovie.total}
+          listFilmCategories={listMovie.movies}
+          title={listMovie.movies[0]?.categories[0].name}
+          isSwiper={false}
+          pagination={pagination}
+          setPagination={setPagination}
+        />
+      </CollectionFilm>
+    </div>
   );
 }

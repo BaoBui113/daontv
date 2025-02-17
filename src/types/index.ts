@@ -1,3 +1,5 @@
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+
 export interface IFilmCategory {
   id: number;
   title: string;
@@ -35,4 +37,15 @@ export interface IMovies {
   des: string;
   title: string;
   createdDate: string;
+}
+
+export interface ICategories {
+  id: number;
+  name: string;
+}
+
+export interface ICategoriesFooter extends ICategories {
+  image: StaticImport;
+  link?: string;
+  title: string;
 }
