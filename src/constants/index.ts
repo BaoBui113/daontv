@@ -1,4 +1,5 @@
 export const limitMovies = 24;
+export const limitSearch = 10;
 export const limitRelatedMovies = 8;
 export const ANIMATION_REVEAL_ELEMENT = {
   BOTTOM_TO_TOP: {

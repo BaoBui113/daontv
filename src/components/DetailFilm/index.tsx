@@ -85,13 +85,11 @@ export default function DetailMovie({ movie }: { movie: string }) {
     <>
       {detailMovie ? (
         <CollectionFilm mainTitle={detailMovie?.title ?? ""}>
-          <div
-            className={`${ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.default} mb-5`}
-          >
+          <div className={` mb-5`}>
             <MoviePlayer movieUrl={video_url!} />
           </div>
           <div
-            className={`my-1 bg-[#313131] rounded px-4 py-6 flex gap-[10px] flex-wrap items-center ${ANIMATION_REVEAL_ELEMENT.LEFT_TO_RIGHT.default}`}
+            className={`my-1 bg-[#313131] rounded px-4 py-6 flex gap-[10px] flex-wrap items-center ${ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default}`}
           >
             <span>서버 : </span>
             {detailMovie?.episodes
@@ -111,7 +109,7 @@ export default function DetailMovie({ movie }: { movie: string }) {
               .reverse()}
           </div>
           <div
-            className={`${ANIMATION_REVEAL_ELEMENT.RIGHT_TO_LEFT.default} my-1`}
+            className={`${ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default} my-1`}
           >
             <InformationDetailFilm profile={detailMovie} />
           </div>
