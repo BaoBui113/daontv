@@ -1,7 +1,10 @@
 "use client";
 import search_icon from "@/assets/icons/icon-search.svg";
+import avatar from "@/assets/images/avatar.png";
 import logo from "@/assets/images/logo.svg";
 import { limitSearch } from "@/constants";
+import { useAuth } from "@/context/AuthContext";
+import { useModal } from "@/context/ModalContext";
 import useClickOutside from "@/hook/useClickOutSide";
 import useDebounce from "@/hook/useDebounce";
 import useScrollOpacity from "@/hook/useScroolOpacity";
@@ -10,6 +13,8 @@ import { IMovies } from "@/types";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import AvatarDropdown from "../AvatarDropDown";
+import ModalLogin from "../ModalLogin";
 
 export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null as unknown as HTMLDivElement);
@@ -33,13 +38,11 @@ export default function Header() {
     movies: [],
     total: 0,
   });
+  const { user } = useAuth();
+  const { handleShowModalLogin, closeModal, statusModal } = useModal();
   const opacity = useScrollOpacity();
   const router = useRouter();
   const handleSearch = (value: string) => {
-    // if (!value) {
-    //   router.push("/");
-    //   return;
-    // }
     router.push(`/search/${decodeURIComponent(value as string)}`);
   };
 
@@ -93,93 +96,103 @@ export default function Header() {
   }, [listMovie.movies.length]);
 
   return (
-    <div
-      style={{ backgroundColor: `rgba(58, 58, 58, ${opacity})` }}
-      className="bg-[#3A3A3A] z-50 gap-4 md:gap-0 h-[77px] px-4 left-0 right-0 top-0  md:rounded-[100px] md:h-[53px] fixed md:top-2 md:bottom-2 md:right-4 md:left-4 md:px-6 flex items-center justify-between"
-    >
+    <>
       <div
-        onClick={() => {
-          router.push("/");
-        }}
-        className="relative w-[95px] h-5 md:w-[152px] md:h-[33px] flex-shrink-0 cursor-pointer"
+        style={{ backgroundColor: `rgba(58, 58, 58, ${opacity})` }}
+        className="bg-[#3A3A3A] z-50 gap-4 md:gap-0 h-[77px] px-4 left-0 right-0 top-0  md:rounded-[100px] md:h-[53px] fixed md:top-2 md:bottom-2 md:right-4 md:left-4 md:px-6 flex items-center justify-between"
       >
-        <Image src={logo} alt="logo" fill />
-      </div>
-      <div className="flex gap-3 md:gap-[10px] items-center pr-4 md:pr-8">
-        <div className="relative max-w-[270px] w-full h-[37px]">
-          <input
-            value={decodeURIComponent(value as string)}
-            onChange={(e) => {
-              //   if (e.target.value === "") {
-              //     router.push("/");
-              //   }
-              setListMovie({ movies: [], total: 0 });
-              setPagination({ page: 1, limit: 10 });
-              setValue(e.target.value);
-            }}
-            type="text"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch(value);
-              }
-            }}
-            className="w-full h-[37px] rounded-[35px] bg-[#323232] pl-4 pr-10 text-white focus:outline-none"
-          />
-          {value && (
-            <div
-              onClick={() => {
-                setValue("");
-                router.push("/");
-              }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-            >
-              X
-            </div>
-          )}
-          {listMovie?.movies?.length > 0 && openMenu && (
-            <div
-              ref={menuRef}
-              onScroll={(e) => handleScroll(e)}
-              className="absolute  mt-2 left-0 bg-[#3A3A3A] w-full max-h-[200px] overflow-y-auto rounded-md flex flex-col"
-            >
-              {listMovie?.movies?.map((item, index) => {
-                return (
-                  <div
-                    onClick={() => {
-                      router.push(
-                        `/${item.categories[0].name.replace("/", "-")}/${
-                          item.id
-                        }`
-                      );
-                      setValue(item.title);
-                      setOpenMenu(false);
-                    }}
-                    key={index}
-                    className="flex gap-2 items-center cursor-pointer hover:bg-slate-800 px-4 py-2"
-                  >
-                    <Image
-                      src={item.image}
-                      alt="search-icon"
-                      width={30}
-                      height={30}
-                    />
-                    <p className="text-sm">{item.title}</p>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
         <div
           onClick={() => {
-            handleSearch(value);
+            router.push("/");
           }}
-          className="relative w-5 h-5 cursor-pointer"
+          className="relative w-[95px] h-5 md:w-[152px] md:h-[33px] flex-shrink-0 cursor-pointer"
         >
-          <Image src={search_icon} alt="search-icon" fill />
+          <Image src={logo} alt="logo" fill />
+        </div>
+        <div className="flex gap-3 md:gap-[10px] items-center pr-4 md:pr-8">
+          <div className="relative max-w-[270px] w-full h-[37px]">
+            <input
+              value={decodeURIComponent(value as string)}
+              onChange={(e) => {
+                setListMovie({ movies: [], total: 0 });
+                setPagination({ page: 1, limit: 10 });
+                setValue(e.target.value);
+              }}
+              type="text"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch(value);
+                }
+              }}
+              className="w-full h-[37px] rounded-[35px] bg-[#323232] pl-4 pr-10 text-white focus:outline-none"
+            />
+            {value && (
+              <div
+                onClick={() => {
+                  setValue("");
+                  router.push("/");
+                }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+              >
+                X
+              </div>
+            )}
+            {listMovie?.movies?.length > 0 && openMenu && (
+              <div
+                ref={menuRef}
+                onScroll={(e) => handleScroll(e)}
+                className="absolute  mt-2 left-0 bg-[#3A3A3A] w-full max-h-[200px] overflow-y-auto rounded-md flex flex-col"
+              >
+                {listMovie?.movies?.map((item, index) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        router.push(
+                          `/${item.categories[0].name.replace("/", "-")}/${
+                            item.id
+                          }`
+                        );
+                        setValue(item.title);
+                        setOpenMenu(false);
+                      }}
+                      key={index}
+                      className="flex gap-2 items-center cursor-pointer hover:bg-slate-800 px-4 py-2"
+                    >
+                      <Image
+                        src={item.image}
+                        alt="search-icon"
+                        width={30}
+                        height={30}
+                      />
+                      <p className="text-sm">{item.title}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div
+            onClick={() => {
+              handleSearch(value);
+            }}
+            className="relative w-5 h-5 cursor-pointer"
+          >
+            <Image src={search_icon} alt="search-icon" fill />
+          </div>
+          {!user ? (
+            <button
+              onClick={handleShowModalLogin}
+              className="bg-[#00C8FA] py-1 px-4 rounded"
+            >
+              로그인
+            </button>
+          ) : (
+            <AvatarDropdown avatar={avatar} />
+          )}
         </div>
       </div>
-    </div>
+      <ModalLogin isOpen={statusModal === "login"} onClose={closeModal} />
+    </>
   );
 }

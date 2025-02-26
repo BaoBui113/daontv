@@ -7,6 +7,7 @@ import { IEpisodes, IMovies } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CollectionFilm from "../CollectionFilm";
+import Comment from "../Comment";
 import InformationDetailFilm from "../InformationFilm";
 import MoviePlayer from "../MoviePlayer";
 import RelatedFilm from "../RelatedFilm";
@@ -112,6 +113,11 @@ export default function DetailMovie({ movie }: { movie: string }) {
             className={`${ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default} my-1`}
           >
             <InformationDetailFilm profile={detailMovie} />
+          </div>
+          <div
+            className={`my-1 ${ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default}`}
+          >
+            <Comment />
           </div>
           <div
             className={`my-4 ${ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default}`}

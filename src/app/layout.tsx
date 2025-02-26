@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 
-import MenuCategory from "@/components/MenuCategory";
-import ScrollToTop from "@/components/ScroolToTop";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import { AuthProvider } from "@/context/AuthContext";
+import { ModalProvider } from "@/context/ModalContext";
 import "./globals.css";
 
 const notoSansKR = Noto_Sans_KR({
@@ -26,13 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${notoSansKR.variable} noto-sans-kr-font`}>
-        <div className="bg-black min-h-screen text-white">
-          <Header />
-          {children}
-          <Footer />
-          <ScrollToTop />
-          <MenuCategory />
-        </div>
+        <ModalProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ModalProvider>
       </body>
     </html>
   );
