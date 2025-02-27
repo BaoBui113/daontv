@@ -46,8 +46,8 @@ export default function Footer() {
     fetchCategory();
   }, []);
   const selectedCategories = categories
-    .filter((category) => [1, 7, 2].includes(category.id))
-    .map((category) => {
+    ?.filter((category) => [1, 7, 2].includes(category.id))
+    ?.map((category) => {
       switch (category.id) {
         case 1:
           return {
@@ -74,7 +74,7 @@ export default function Footer() {
           return category;
       }
     });
-  selectedCategories.unshift({
+  selectedCategories?.unshift({
     title: "홈",
     image: icon_home,
     link: "/",
@@ -104,7 +104,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="fixed bottom-0 left-0 right-0 flex items-center  md:hidden gap-8 sm:gap-14 bg-black justify-between py-3 px-4 z-50">
-        {selectedCategories.map((category, index) => (
+        {selectedCategories?.map((category, index) => (
           <Category key={index} category={category} />
         ))}
         <div

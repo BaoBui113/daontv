@@ -1,159 +1,201 @@
 "use client";
 import avatar_default from "@/assets/icons/icon_avatar_default.svg";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { useGetList } from "@/context/GetListContext";
+import { deleteCommentService } from "@/services/comments";
+import { IComment } from "@/types";
+import Cookies from "js-cookie";
+import moment from "moment";
 import Image from "next/image";
 import { useState } from "react";
+import DeleteComment from "./DeleteComment";
 import PostComment from "./PostComment";
-const listComment = [
-  {
-    id: 1,
-    avatar: avatar_default,
-    name: " 관리자 Jake",
-    date: "2 days ago",
-    content: `법률이 헌법에 위반되는 여부가 재판의 전제가 된 경우에는 법원은
-          헌법재판소에 제청하여 그 심판에 의하여 재판한다.`,
-    subComment: [
-      {
-        id: 2,
-        avatar: avatar_default,
-        name: " 관리자 Jake 2",
-        date: "3 days ago",
-        content: `법률이 헌법에 위반되는 여부가 재판의 전제가 된 경우에는 법원은
-          헌법재판소에 제청하여 그 심판에 의하여 재판한다.`,
-      },
-      {
-        id: 3,
-        avatar: avatar_default,
-        name: " 관리자 Jake 3",
-        date: "3 days ago",
-        content: `법률이 헌법에 위반되는 여부가 재판의 전제가 된 경우에는 법원은
-          헌법재판소에 제청하여 그 심판에 의하여 재판한다.`,
-      },
-    ],
-  },
-  {
-    id: 4,
-    avatar: avatar_default,
-    name: "톰과란제리",
-    date: "3 days ago",
-    content: `법률이 헌법에 위반되는 여부가 재판의 전제가 된 경우에는 법원은
-          헌법재판소에 제청하여 그 심판에 의하여 재판한다.`,
-  },
-  {
-    id: 5,
-    avatar: avatar_default,
-    name: "톰과란제리",
-    date: "3 days ago",
-    content: `법률이 헌법에 위반되는 여부가 재판의 전제가 된 경우에는 법원은
-          헌법재판소에 제청하여 그 심판에 의하여 재판한다.`,
-  },
-];
+const ActionButtons = ({
+  itemId,
+  toggleReplyInput,
+  content,
+
+  toggleDelete,
+}: {
+  itemId: string;
+  toggleReplyInput: (id: string) => void;
+  toggleDelete: (id: string) => void;
+  content: string;
+}) => (
+  <>
+    <p className="mb-[14px] font-light leading-5">{content}</p>
+    <div className="flex gap-6 items-center text-[#8C8C8C] font-normal leading-5 text-base">
+      <button
+        onClick={() => {
+          toggleDelete(itemId);
+        }}
+      >
+        Remove
+      </button>
+      <button onClick={() => toggleReplyInput(itemId)}>Reply</button>
+    </div>
+  </>
+);
+
 const CommentItems = ({
-  item,
+  listComment,
   isParentComment,
-  isLastComment,
+  movie_id,
+  fetchListComment,
 }: {
   isParentComment?: boolean;
-  isLastComment?: boolean;
-  item: {
-    id: number;
-
-    avatar: StaticImport;
-    name: string;
-    date: string;
-    content: string;
-    subComment?: {
-      id: number;
-      avatar: StaticImport;
-      name: string;
-      date: string;
-      content: string;
-    }[];
-  };
+  listComment: IComment[];
+  movie_id: string;
+  fetchListComment: () => void;
 }) => {
-  const [replyStates, setReplyStates] = useState<{ [key: number]: boolean }>(
+  const [replyStates, setReplyStates] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const toggleReplyInput = (id: number) => {
-    // setReplyStates((prev) => {
-    //   const newState = Object.keys(prev).reduce((acc, key) => {
-    //     acc[Number(key)] = false;
-    //     return acc;
-    //   }, {} as Record<number, boolean>);
-
-    //   return { ...newState, [id]: !prev[id] };
-    // });
+  const [deleteStates, setDeleteStates] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+  const toggleReplyInput = (id: string) => {
     setReplyStates((prev) => {
-      // Tạo một object mới với tất cả các ID đều là false
-      const newState = { [id]: !prev[id] }; // Chỉ chuyển đổi trạng thái của ID được nhấp vào
+      const newState = { [id]: !prev[id] };
+      return newState;
+    });
+    setDeleteStates(() => {
+      const newState = { [id]: false };
       return newState;
     });
   };
-  console.log("replyStates", replyStates);
+  const toggleDelete = (id: string) => {
+    setDeleteStates((prev) => {
+      const newState = { [id]: !prev[id] };
+      return newState;
+    });
+    setReplyStates(() => {
+      const newState = { [id]: false };
+      return newState;
+    });
+  };
+  const handleCommentDelete = async (id: string) => {
+    const token = Cookies.get("movie_token");
+    if (!token) return;
+    setIsLoadingDelete(true);
+    try {
+      await deleteCommentService(id, token);
+      fetchListComment();
+    } catch {
+      alert("Error");
+    } finally {
+      setIsLoadingDelete(false);
+    }
+  };
+  console.log("listComment", !!listComment[0].user_info.avatar);
 
-  return (
-    <div
-      className={
-        isParentComment && !isLastComment
-          ? "border-b-[1px] border-[#1B1B1B] mb-[30px]"
-          : ""
-      }
-    >
-      <div className="flex gap-4 mb-[30px]">
-        <div className="relative w-9 h-9 rounded-full">
-          <div className="w-9 h-9 bg-[#F1B0FC] rounded-full blur-[10px] absolute top-0 left-0" />
-          <Image src={item.avatar} alt="avatar_default" fill />
-        </div>
-        <div className="flex flex-col">
-          <div className="flex gap-7 items-center mb-[10px]">
-            <span className="text-[#FF8A00] font-semibold text-lg leading-[22px]">
-              {item.name}
-            </span>
-            <span className="text-[#8C8C8C] font-normal leading-5 text-base">
-              {item.date}
-            </span>
-          </div>
-          <span className="mb-[14px] font-light leading-5">{item.content}</span>
-          <div className="flex gap-6 items-center text-[#8C8C8C] font-normal leading-5 text-base">
-            <button>Remove</button>
-            <button onClick={() => toggleReplyInput(item.id)}>Reply</button>
-          </div>
-        </div>
-      </div>
-      {replyStates[item.id] && (
-        <div className="mb-8">
-          <PostComment />
-        </div>
-      )}
-      {item.subComment && item.subComment.length > 0 && (
-        <div className="ml-[50px]">
-          {item.subComment.map((subItem, index) => {
-            return (
-              <CommentItems
-                item={subItem}
-                key={index}
-                isParentComment={false}
-              />
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-};
-export default function ListComment() {
   return (
     <>
       {listComment.map((item, index) => {
         return (
-          <CommentItems
-            isLastComment={listComment.length - 1 === index}
-            isParentComment
-            item={item}
+          <div
+            className={
+              isParentComment && listComment.length - 1 !== index
+                ? "border-b-[1px] border-[#1B1B1B] mb-[30px]"
+                : ""
+            }
             key={index}
-          />
+          >
+            <div className="mb-[30px] flex flex-col gap-4">
+              <div className="flex gap-4 md:items-start items-center">
+                <div className="relative w-9 h-9 rounded-full flex-shrink-0">
+                  <div className="w-9 h-9 bg-[#F1B0FC] rounded-full blur-[10px] absolute top-0 left-0" />
+                  <Image
+                    src={
+                      !!item.user_info.avatar
+                        ? item.user_info.avatar
+                        : avatar_default
+                    }
+                    alt="avatar_default"
+                    fill
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex gap-6 md:gap-7 items-center mb-[10px]">
+                    <span className="text-[#FF8A00] font-semibold text-lg leading-[22px] line-clamp-1">
+                      {item.user_info.nickname}
+                    </span>
+                    <span className="text-[#8C8C8C] font-normal leading-5 text-base line-clamp-1 overflow-hidden">
+                      {moment(item.updated_at).fromNow()}
+                    </span>
+                  </div>
+                  <div className="md:block hidden">
+                    <ActionButtons
+                      content={item.content}
+                      itemId={item.id}
+                      toggleReplyInput={toggleReplyInput}
+                      toggleDelete={toggleDelete}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="md:hidden block">
+                <ActionButtons
+                  content={item.content}
+                  itemId={item.id}
+                  toggleReplyInput={toggleReplyInput}
+                  toggleDelete={toggleDelete}
+                />
+              </div>
+            </div>
+            {deleteStates[item.id] && (
+              <div className="mb-8">
+                <DeleteComment
+                  handleCancel={() => toggleDelete(item.id)}
+                  commentId={item.id}
+                  handleCommentDelete={() => handleCommentDelete(item.id)}
+                  isLoadingDelete={isLoadingDelete}
+                />
+              </div>
+            )}
+            {replyStates[item.id] && (
+              <div className="mb-8">
+                <PostComment
+                  movie_id={movie_id}
+                  fetchListComment={fetchListComment}
+                  parent_id={item.id}
+                />
+              </div>
+            )}
+            {item.replies && item.replies.length > 0 && (
+              <div className="ml-8 md:ml-[50px]">
+                <CommentItems
+                  movie_id={movie_id}
+                  listComment={item.replies}
+                  isParentComment={false}
+                  fetchListComment={fetchListComment}
+                />
+              </div>
+            )}
+          </div>
         );
       })}
+    </>
+  );
+};
+export default function ListComment({
+  movie_id,
+  fetchListComment,
+}: {
+  movie_id: string;
+  fetchListComment: () => void;
+}) {
+  const { listComment } = useGetList();
+
+  return (
+    <>
+      <CommentItems
+        listComment={listComment}
+        isParentComment
+        movie_id={movie_id}
+        fetchListComment={fetchListComment}
+      />
     </>
   );
 }

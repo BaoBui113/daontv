@@ -49,3 +49,18 @@ export interface ICategoriesFooter extends ICategories {
   link?: string;
   title: string;
 }
+interface IUserComment {
+  nickname: string;
+  username: string;
+  avatar: string;
+}
+export interface IComment {
+  avatar: string;
+  content: string;
+
+  id: string;
+  user_id: string;
+  updated_at: string;
+  user_info: IUserComment;
+  replies?: IComment[];
+}

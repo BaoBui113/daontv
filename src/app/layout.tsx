@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 
 import { AuthProvider } from "@/context/AuthContext";
+import { GetListProvider } from "@/context/GetListContext";
 import { ModalProvider } from "@/context/ModalContext";
 import "./globals.css";
 
@@ -25,7 +26,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${notoSansKR.variable} noto-sans-kr-font`}>
         <ModalProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <GetListProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </GetListProvider>
         </ModalProvider>
       </body>
     </html>

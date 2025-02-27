@@ -1,8 +1,10 @@
 "use client";
+import { decodeToken } from "@/helper/decodeToken";
 import Cookies from "js-cookie";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 type IProfile = {
-  token: string;
+  username: string;
+  nickname: string;
 };
 interface AuthContextType {
   user: IProfile | null;
@@ -28,7 +30,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       Cookies.set("movie_token", token, {
         expires: 1 / 24,
       });
-      setUser({ token });
+      console.log("decoded token", decodeToken(token));
+      const decode = decodeToken(token);
+      setUser({ username: decode.username, nickname: decode.nickname });
     } catch (error) {
       console.error("Login failed: invalid auth", error);
     }
@@ -42,7 +46,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   React.useEffect(() => {
     const storedToken = Cookies.get("movie_token");
     if (storedToken) {
-      setUser({ token: storedToken });
+      //   setUser({ token: storedToken });
+      const decode = decodeToken(storedToken);
+      setUser({ username: decode.username, nickname: decode.nickname });
     } else {
       setUser(null);
     }

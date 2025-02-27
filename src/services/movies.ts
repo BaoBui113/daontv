@@ -1,3 +1,4 @@
+"use client";
 import { fetchData } from "@/helper/fetch";
 
 export const getMovies = async (group: number[]) => {

@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useModal } from "@/context/ModalContext";
+import { loginService } from "@/services/auth";
 import { FormEvent, useState } from "react";
 
 type FormInputs = {
@@ -50,22 +51,11 @@ const LoginForm = () => {
   }) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/agent/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-        }
-      );
-      const data = await res.json();
-
-      if (data.error) {
-        throw new Error(data.error);
+      const data = await loginService({ username, password });
+      if (!data.success) {
+        throw new Error(data.message);
       }
-      const token = data.token;
+      const token = data.data;
       loginAuth(token);
       closeModal();
     } catch {
@@ -147,6 +137,7 @@ const LoginForm = () => {
 
         <button
           type="submit"
+          disabled={loading}
           onClick={onSubmit}
           className="w-full bg-red-700 text-white mx-auto rounded-md px-4 py-2"
           form="login-form"

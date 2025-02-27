@@ -3,9 +3,11 @@ export const fetchData = async <T>(
   url: string,
   method: string = "GET",
   headers: Record<string, string> = {},
-  body?: T
+  body?: T,
+  token?: string
 ) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  console.log("body", body);
 
   if (!baseUrl) {
     throw new Error("API base URL is not defined");
@@ -16,11 +18,12 @@ export const fetchData = async <T>(
   try {
     const response = await fetch(fullUrl, {
       method: method,
-      headers: {
+      headers: new Headers({
         "Content-Type": "application/json",
         "x-agent-key": process.env.NEXT_PUBLIC_X_AGENT_KEY || "",
+        Authorization: token ? `Bearer ${token}` : "",
         ...headers,
-      },
+      }),
       body:
         method === "POST" || method === "PUT"
           ? JSON.stringify(body)

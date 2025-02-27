@@ -1,6 +1,5 @@
 "use client";
 import search_icon from "@/assets/icons/icon-search.svg";
-import avatar from "@/assets/images/avatar.png";
 import logo from "@/assets/images/logo.svg";
 import { limitSearch } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
@@ -109,7 +108,7 @@ export default function Header() {
         >
           <Image src={logo} alt="logo" fill />
         </div>
-        <div className="flex gap-3 md:gap-[10px] items-center pr-4 md:pr-8">
+        <div className="flex gap-3 md:gap-[10px] items-center">
           <div className="relative max-w-[270px] w-full h-[37px]">
             <input
               value={decodeURIComponent(value as string)}
@@ -183,12 +182,12 @@ export default function Header() {
           {!user ? (
             <button
               onClick={handleShowModalLogin}
-              className="bg-[#00C8FA] py-1 px-4 rounded"
+              className="bg-[#00C8FA] py-1 rounded w-[100px] md:w-[60px] px-2 text-sm"
             >
               로그인
             </button>
           ) : (
-            <AvatarDropdown avatar={avatar} />
+            <AvatarDropdown user={user} />
           )}
         </div>
       </div>

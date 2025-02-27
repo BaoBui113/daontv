@@ -2,12 +2,17 @@
 
 import { useAuth } from "@/context/AuthContext";
 import useClickOutside from "@/hook/useClickOutSide";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 
-export default function AvatarDropdown({ avatar }: { avatar: StaticImport }) {
+export default function AvatarDropdown({
+  user,
+}: {
+  user: {
+    username: string;
+    nickname: string;
+  };
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null as unknown as HTMLDivElement);
   const { logout } = useAuth();
@@ -16,18 +21,14 @@ export default function AvatarDropdown({ avatar }: { avatar: StaticImport }) {
   const handleLogout = () => {
     logout();
   };
+
   return (
     <div ref={dropdownRef} className="relative">
       <div
-        className="relative w-10 h-10 rounded-full cursor-pointer"
+        className="bg-yellow-400 w-10 h-10 rounded-full cursor-pointer flex items-center justify-center text-xl font-bold"
         onClick={toggleDropdown}
       >
-        <Image
-          src={avatar || "/placeholder.svg"}
-          fill
-          alt="avatar"
-          className="rounded-full"
-        />
+        <span>{user.username.charAt(0)}</span>
       </div>
 
       {isOpen && (

@@ -42,6 +42,8 @@ export default function DetailMovie({ movie }: { movie: string }) {
     router.push(`${window.location.pathname}?number_ep=${episode.ep_no}`);
     setVideoUrl(episode.video_url);
   };
+  console.log("detailMovie", detailMovie);
+
   useEffect(() => {
     const fetchMovie = async () => {
       try {
@@ -117,7 +119,7 @@ export default function DetailMovie({ movie }: { movie: string }) {
           <div
             className={`my-1 ${ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default}`}
           >
-            <Comment />
+            <Comment movie={movie} />
           </div>
           <div
             className={`my-4 ${ANIMATION_REVEAL_ELEMENT.BOTTOM_TO_TOP.default}`}
